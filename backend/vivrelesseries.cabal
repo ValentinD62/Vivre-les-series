@@ -1,0 +1,52 @@
+cabal-version:      3.0
+name:               vivrelesseries
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            BSD-2-Clause
+license-file:       LICENSE
+author:             PaulMaillard
+maintainer:         paul.pihem@hotmail.com
+-- copyright:
+category:           Web
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+common deps
+    ghc-options:        -Wall -O
+    default-language:   Haskell2010
+    build-depends:      aeson, base, lucid, scotty, text, text-show, directory,
+                        wai-extra, wai-middleware-static, selda, selda-sqlite, wai-cors, 
+                         servant
+                        , servant-server
+                        , servant-client
+                        , servant-swagger
+                        , servant-swagger-ui
+                        , servant-swagger-ui-core
+                        , servant-openapi3
+                        , swagger2
+                        , base-compat-batteries
+                        , warp
+                        , lucid
+                        , lens
+
+
+library
+    import:             deps
+    hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant 
+    exposed-modules:    User, UserTable, CreateDB, UserServant, ServantMain, PullUser,
+                        Movie, Favorite, Comment
+
+executable vivrelesseries
+    import:           deps, warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    vivrelesseries
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
