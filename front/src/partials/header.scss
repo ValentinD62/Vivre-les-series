@@ -6,12 +6,17 @@
   background-color: $blue-color;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  justify-content: space-between;
 
-  &__div-img {
+  &__div-logo {
     margin-left: 1rem;
   }
 
-  &__img {
+  &__logo {
     height: 100px;
+  }
+
+  &__div-user {
+    margin-right: 1.5rem;
   }
 }

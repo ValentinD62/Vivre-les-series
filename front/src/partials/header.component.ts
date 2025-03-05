@@ -8,10 +8,13 @@ export class HeaderComponent extends LitElement {
     render() {
         return html`
             <header class="header-container">
-                <div class="header-container__div-img">
-                    <a href="/"><img src="logo_vivre_series.png" class="header-container__img" alt="logo"></a>
+                <div class="header-container__div-logo">
+                    <a href="/"><img src="logo_vivre_series.png" class="header-container__logo" alt="logo"></a>
                 </div>
                 <search-bar></search-bar>
+                <div class="header-container__div-user">
+                    <img src="icons_user.png" class="header-container__user" alt="logo"></a>
+                </div>
             </header>
         `;
     }
