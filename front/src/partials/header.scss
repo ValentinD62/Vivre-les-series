@@ -1,0 +1,17 @@
+@import "../assets/variable.scss";
+.header-container{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  background-color: $blue-color;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  &__div-img {
+    margin-left: 1rem;
+  }
+
+  &__img {
+    height: 100px;
+  }
+}
