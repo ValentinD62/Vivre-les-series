@@ -1,7 +1,7 @@
 import {customElement} from "lit/decorators.js";
 import {html, css, LitElement, unsafeCSS } from "lit";
 import HeaderCSS from "./header.scss?inline";
-import "../components/search-bar/search-bar.component";
+import "../../components/search-bar/search-bar.component.ts";
 
 @customElement('header-component')
 export class HeaderComponent extends LitElement {
@@ -9,7 +9,7 @@ export class HeaderComponent extends LitElement {
         return html`
             <header class="header-container">
                 <div class="header-container__div-logo">
-                    <a href="/"><img src="logo_vivre_series.png" class="header-container__logo" alt="logo"></a>
+                    <a href="/front/public"><img src="logo_vivre_series.png" class="header-container__logo" alt="logo"></a>
                 </div>
                 <search-bar></search-bar>
                 <div class="header-container__div-user">

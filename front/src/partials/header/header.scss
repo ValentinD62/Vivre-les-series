@@ -1,4 +1,4 @@
-@import "../assets/variable.scss";
+@import "../../assets/variable";
 .header-container{
   display: flex;
   align-items: center;
@@ -14,9 +14,18 @@
 
   &__logo {
     height: 100px;
+    animation: slide-in 1s ease-out;
   }
 
   &__div-user {
     margin-right: 1.5rem;
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
