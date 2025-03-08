@@ -29,15 +29,15 @@ type SelectHugo = "user" :> Get '[JSON][User]
 type InsertUser = "user" :> ReqBody '[JSON] User :> Post '[JSON] User
 type SelectConnection = "user" :> Capture "pseudo" Text :> Capture "password" Text :> Get '[JSON][User]
 
-
+handlePostUser :: User -> IO()
+handlePostUser = createUser 
 
 handleSelectUsers :: Handler [User]
 handleSelectUsers = 
     liftIO pullUser
 
 handleSelectHugo :: Handler [User]
-handleSelectHugo = 
-    liftIO select2User
+handleSelectHugo = liftIO select2User
 
 handleSelectConnection :: Text -> Text -> Handler [User]
 handleSelectConnection pseudo password = liftIO $ selectOutUserConnection pseudo password

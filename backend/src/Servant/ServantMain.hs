@@ -21,12 +21,14 @@ type API
     = SelectUsers
     :<|> SelectHugo
     :<|> SelectConnection
+    :<|> InsertUser
 
 handleServerApi  :: Server API
 handleServerApi 
     =    handleSelectUsers
     :<|> handleSelectHugo
     :<|> handleSelectConnection
+    :<|> handlePostUser
 
 app :: Application
 app = serve (Proxy :: Proxy API) handleServerApi

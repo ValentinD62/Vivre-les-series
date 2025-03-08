@@ -38,3 +38,13 @@ selectUser =
     user <- select userTable
     restrict (user ! #user_firstname .== "Hugoat")    
     return user
+
+
+insertOutUser :: User -> IO()
+insertOutUser u = liftIO(withSQLite "serie.db" $ insertUser u)
+
+insertUser :: User -> SeldaT SQLite IO()
+insertUser (User _ firstname lastname password picture ) = 
+  tryInsert userTable
+        [User def  firstname lastname password picture]
+        >>= liftIO . print
