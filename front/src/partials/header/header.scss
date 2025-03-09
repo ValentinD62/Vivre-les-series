@@ -1,9 +1,9 @@
-@import "../../assets/variable";
+@use "../../assets/variable";
 .header-container{
   display: flex;
   align-items: center;
   flex-direction: row;
-  background-color: $blue-color;
+  background-color: variable.$blue-color;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   justify-content: space-between;
@@ -19,6 +19,7 @@
 
   &__div-user {
     margin-right: 1.5rem;
+    cursor: pointer;
   }
 }
 @keyframes slide-in {
