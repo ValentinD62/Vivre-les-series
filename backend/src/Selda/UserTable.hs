@@ -4,9 +4,11 @@
 module UserTable where
 
 import User
+import Debug.Trace
 
 import Database.Selda
 import Database.Selda.SQLite
+import Data.Text (unpack)
 
 -- | Déclaration des contraintes de la table user
 userTable :: Table User
@@ -41,10 +43,12 @@ selectUser =
 
 
 insertOutUser :: User -> IO()
+-- insertOutUser (User _ _ u _ _) | trace (unpack u) False = undefined
 insertOutUser u = liftIO(withSQLite "serie.db" $ insertUser u)
 
+
 insertUser :: User -> SeldaT SQLite IO()
-insertUser (User _ firstname lastname password picture ) = 
+insertUser (User _ firstname lastname password picture) = 
   tryInsert userTable
         [User def  firstname lastname password picture]
         >>= liftIO . print

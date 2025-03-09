@@ -11,6 +11,7 @@ data Movie = Movie
   , external_id :: Int
   } deriving (Generic, Show)
 
+-- | Overload automatique pour transformer les champs de la table user en table SQL
 instance SqlRow Movie
 
 -- | Overload pour transformer les champs de la table user en fichier json

@@ -19,8 +19,10 @@ import Network.Wai.Handler.Warp (run)
 import CreateDB
 import ServantMain
 
+
 dbFilename :: String
 dbFilename = "serie.db"
+
 
 -- | Serveur permettant de créer les routes pour l'accès à la bdd
 -- /comment/pull/:num/ Permet de récupérer un fichier json des commentaires en fonction de l'id du lieu
@@ -30,7 +32,7 @@ main = do
   dbExists <- doesFileExist dbFilename
   conn <- sqliteOpen dbFilename
   when (not dbExists) $ runSeldaT dbInit conn
-  run 8080 app
+  run 8080 $ logStdoutDev app
 
 
 
