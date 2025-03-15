@@ -26,3 +26,12 @@ instance ToJSON Favorite where
            , "movie_id" .= show movie_cid
            , "added_at" .= show added_at
            ]
+
+-- | Overload pour transformer le fichier JSON en type Comment
+instance FromJSON Favorite where
+  parseJSON = withObject "Favorite" $ \u -> do
+    cid <- u .: "favorite_id"
+    cid_user <-  u .: "user_id"
+    cid_movie <- u .: "movie_id"
+    added_at <- u .: "added_at"
+    return $ Favorite (toId cid) (toId cid_user) (toId cid_movie) added_at
