@@ -33,13 +33,17 @@ common deps
                         , warp
                         , lucid
                         , lens
+                        , http-client
+                        , http-client-tls
+                        , servant-client-core
+                        , aeson-casing
 
 
 library
     import:             deps
-    hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant 
+    hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant, src\Extern
     exposed-modules:    User, UserTable, CreateDB, UserServant, ServantMain, PullUser,
-                        Movie, Favorite, Comment
+                        Movie, Favorite, Comment, MovieExtern, OMDbApi
 
 executable vivrelesseries
     import:           deps, warnings

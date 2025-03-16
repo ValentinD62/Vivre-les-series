@@ -18,6 +18,7 @@ import Network.Wai.Handler.Warp (run)
 
 import CreateDB
 import ServantMain
+import OMDbApi
 
 
 dbFilename :: String
@@ -29,10 +30,16 @@ dbFilename = "serie.db"
 -- /comment/create Permet d'ajouter un commentaire dans la base de donnée
 main :: IO ()
 main = do
-  dbExists <- doesFileExist dbFilename
-  conn <- sqliteOpen dbFilename
-  when (not dbExists) $ runSeldaT dbInit conn
-  run 8080 $ logStdoutDev app
+  -- dbExists <- doesFileExist dbFilename
+  -- conn <- sqliteOpen dbFilename
+  -- when (not dbExists) $ runSeldaT dbInit conn
+  -- run 8080 $ logStdoutDev app
+  let apiKey = "486a09b6"
+  let movieTitle = "Inception"
+  result <- fetchMovie apiKey movieTitle
+  case result of
+    Left err  -> putStrLn $ "Erreur: " ++ show err
+    Right movie -> print movie
 
 
 
