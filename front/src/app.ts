@@ -15,10 +15,9 @@ export class AppComponent extends LitElement {
     }
 
     render() {
-        console.log(this.isVisibleUserPopUp);
         return html`
             <header-component @showUserPage="${this.showUserPopUp}"></header-component>
-            <user-form is-visible-user-pop-up="${this.isVisibleUserPopUp}"></user-form>
+            <user-form ?is-visible-user-pop-up="${this.isVisibleUserPopUp}"></user-form>
         `;
     }
 }
