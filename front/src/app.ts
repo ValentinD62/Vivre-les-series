@@ -1,9 +1,11 @@
 import "./assets/variable.scss";
 import "./my-element.ts"
 import "./partials/header/header.component.ts"
+import "./partials/body/body.component.ts"
 import "./components/user/user.component.ts"
 import {customElement, state} from "lit/decorators.js";
-import { html, LitElement } from "lit";
+import {css, html, LitElement, unsafeCSS} from "lit";
+import AppCSS from "./app.scss?inline";
 
 @customElement('app-component')
 export class AppComponent extends LitElement {
@@ -16,10 +18,14 @@ export class AppComponent extends LitElement {
 
     render() {
         return html`
-            <header-component @showUserPage="${this.showUserPopUp}"></header-component>
-            <user-form ?is-visible-user-pop-up="${this.isVisibleUserPopUp}"></user-form>
+            <div class="app-container">
+                <header-component @showUserPage="${this.showUserPopUp}"></header-component>
+                <user-form ?is-visible-user-pop-up="${this.isVisibleUserPopUp}"></user-form>
+                <body-component></body-component>
+            </div>
         `;
     }
+    static styles = css`${unsafeCSS(AppCSS)}`;
 }
 
 declare global {
