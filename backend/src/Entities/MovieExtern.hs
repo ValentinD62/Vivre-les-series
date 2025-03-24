@@ -3,17 +3,30 @@
 
 module MovieExtern where
 
-import Data.Aeson (FromJSON, parseJSON, genericParseJSON, defaultOptions, fieldLabelModifier)
+import Data.Aeson (FromJSON, parseJSON, genericParseJSON, defaultOptions, fieldLabelModifier, camelTo2)
 import Data.Aeson.Casing (aesonDrop, pascalCase)
 import Data.Text (Text)
 import GHC.Generics (Generic)
 
+
 data MovieExtern = MovieExtern
-  { title :: Text
-  , year :: Text
-  , genre :: Text
-  , plot :: Text
+  { name :: Text
+  , adult :: Bool
+  , id :: Int
+  , first_air_date :: Text
+  , popularity :: Float
+  , vote_average :: Float
+  , overview :: Text
+  , poster_path :: Maybe String
+  } deriving (Generic, Show)
+  
+instance FromJSON MovieExtern where 
+    parseJSON = genericParseJSON  defaultOptions { fieldLabelModifier = camelTo2 '_' }
+
+data TMDbResponse = TMDbResponse
+  { 
+    results :: [MovieExtern]
   } deriving (Generic, Show)
 
-instance FromJSON MovieExtern where 
-  parseJSON = genericParseJSON  (aesonDrop 0 pascalCase)
+instance FromJSON TMDbResponse where
+  parseJSON = genericParseJSON defaultOptions { fieldLabelModifier = camelTo2 '_' }
