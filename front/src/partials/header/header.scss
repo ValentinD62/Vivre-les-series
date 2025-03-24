@@ -1,9 +1,9 @@
-@import "../assets/variable.scss";
+@use "../../assets/variable";
 .header-container{
   display: flex;
   align-items: center;
   flex-direction: row;
-  background-color: $blue-color;
+  background-color: variable.$blue-color;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   justify-content: space-between;
@@ -14,9 +14,19 @@
 
   &__logo {
     height: 100px;
+    animation: slide-in 1s ease-out;
   }
 
   &__div-user {
     margin-right: 1.5rem;
+    cursor: pointer;
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }

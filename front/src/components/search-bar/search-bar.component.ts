@@ -14,7 +14,7 @@ export class SearchBarComponent extends LitElement {
     renderShowbar() {
         return this.isShowBar ?
             html`<div class="search-bar-container__div-bar">
-                            <input class="search-bar-container__input" type="text" placeholder="Taper un nom de série" />
+                            <input class="search-bar-container__input" type="text" placeholder="Taper un nom de série" autofocus />
                         </div>` :
             html`<div class="search-bar-container__div-bar"></div>`;
     }
