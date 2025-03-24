@@ -5,12 +5,16 @@
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE TypeOperators              #-}
 {-# LANGUAGE UndecidableInstances       #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module ServantMain where
 
 import Servant
 import Prelude ()
+import Prelude (const, ($))
+import Data.Maybe (Maybe(..))
+import Network.Wai.Middleware.Cors (CorsResourcePolicy, simpleCorsResourcePolicy, cors, corsMethods, corsRequestHeaders, simpleHeaders)
 
 import UserServant
 
@@ -27,5 +31,11 @@ handleServerApi
     :<|> handleSelectConnection
     :<|> handlePostUser
 
+policy :: CorsResourcePolicy
+policy = simpleCorsResourcePolicy
+    { corsMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    , corsRequestHeaders = simpleHeaders
+    }
+
 app :: Application
-app = serve (Proxy :: Proxy API) handleServerApi
+app = cors (const $ Just policy) $ serve (Proxy :: Proxy API) handleServerApi

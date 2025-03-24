@@ -56,12 +56,3 @@ main = do
 --             mapM_ (TIO.putStrLn . name) movies
 --       Nothing  -> putStrLn "API Key not found!" 
   
-  
-
-
-
-policy :: CorsResourcePolicy
-policy = simpleCorsResourcePolicy
-    { corsMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    , corsRequestHeaders = simpleHeaders
-    }
