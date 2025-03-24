@@ -41,7 +41,7 @@ export class UserComponent extends LitElement {
                             </div>
                         </div>
                         <div class="user-form-container__form-btn">
-                            <input type="submit" value="${this.hasAccount ? "Se connecter" : "S'inscrire"}">
+                            <button type="submit" id="submit">${this.hasAccount ? "Se connecter" : "S'inscrire"}</button>
                         </div>
                     </form>
                 </div>
