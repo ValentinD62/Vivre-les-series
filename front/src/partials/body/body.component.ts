@@ -9,7 +9,7 @@ export class BodyComponent extends LitElement {
     render() {
         return html`
             <div class="body-container">
-                <div class="body-container__div-1">
+                <div class="body-container__div-img-latest">
                     <h1>My title</h1>
                     <p>My paragraph</p>
                 </div>
