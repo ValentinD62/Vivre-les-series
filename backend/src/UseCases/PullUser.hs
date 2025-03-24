@@ -16,3 +16,6 @@ pullUser = selectAllUser
 
 pullUserConnection :: Text -> Text -> IO [User]
 pullUserConnection = selectOutUserConnection 
+
+createUser :: User -> IO()
+createUser = insertOutUser
