@@ -43,7 +43,7 @@ library
     import:             deps
     hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant, src\Extern
     exposed-modules:    User, UserTable, CreateDB, UserServant, ServantMain, PullUser,
-                        Movie, Favorite, Comment, MovieExtern, TMDbApi
+                        Movie, Favorite, Comment, MovieExtern, TMDBApi, TMDBServant, UseCaseSerie
 
 executable vivrelesseries
     import:           deps, warnings
