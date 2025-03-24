@@ -1,9 +1,6 @@
 {-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE TypeOperators              #-}
@@ -21,12 +18,14 @@ type API
     = SelectUsers
     :<|> SelectHugo
     :<|> SelectConnection
+    :<|> InsertUser
 
 handleServerApi  :: Server API
 handleServerApi 
     =    handleSelectUsers
     :<|> handleSelectHugo
     :<|> handleSelectConnection
+    :<|> handlePostUser
 
 app :: Application
 app = serve (Proxy :: Proxy API) handleServerApi

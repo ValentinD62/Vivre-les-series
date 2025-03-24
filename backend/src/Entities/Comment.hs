@@ -16,19 +16,29 @@ data Comment = Comment
   , comment_title :: Text
   , comment_body :: Text
   , comment_note :: Int
-  , comment_favorite_added_at :: Int
   } deriving (Generic, Show)
 
 instance SqlRow Comment
 
 -- | Overload pour transformer les champs de la table user en fichier json
 instance ToJSON Comment where
-  toJSON (Comment cid user_cid movie_cid title body note favorite_added_at) =
+  toJSON (Comment cid user_cid movie_cid title body note) =
     object [ "comment_id" .= show cid
            , "user_id" .= show user_cid
            , "movie_id" .= show movie_cid
            , "title" .= title
            , "body" .= body
            , "note" .= note
-           , "favorite_add_at" .= favorite_added_at
            ]
+
+-- | Overload pour transformer le fichier JSON en type Comment
+instance FromJSON Comment where
+  parseJSON = withObject "Comment" $ \u -> do
+    cid <- u .: "comment_id"
+    cid_user <-  u .: "user_id"
+    cid_movie <- u .: "movie_id"
+    title <- u .: "title"
+    body <- u .: "body"
+    note <- u .: "note"
+    return $ Comment (toId cid) (toId cid_user) (toId cid_movie) title body note
+

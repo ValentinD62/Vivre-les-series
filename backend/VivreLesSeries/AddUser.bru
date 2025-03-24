@@ -1,0 +1,21 @@
+meta {
+  name: AddUser
+  type: http
+  seq: 5
+}
+
+post {
+  url: /localhost:8080/user/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user_firstname": "Valentin",
+    "user_id": 0,
+    "user_lastname": "Deux croix",
+    "user_password": "6969",
+    "user_picture": "dovakhin.jpg"
+  }
+}

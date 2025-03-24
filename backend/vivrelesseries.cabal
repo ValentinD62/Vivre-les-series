@@ -19,7 +19,7 @@ common warnings
 common deps
     ghc-options:        -Wall -O
     default-language:   Haskell2010
-    build-depends:      aeson, base, lucid, scotty, text, text-show, directory,
+    build-depends:      aeson, base, lucid, text, text-show, directory,
                         wai-extra, wai-middleware-static, selda, selda-sqlite, wai-cors, 
                          servant
                         , servant-server
@@ -33,13 +33,17 @@ common deps
                         , warp
                         , lucid
                         , lens
+                        , http-client
+                        , http-client-tls
+                        , servant-client-core
+                        , aeson-casing
 
 
 library
     import:             deps
-    hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant 
+    hs-source-dirs:     src, src\Entities, src\Selda, src\UseCases, src\servant, src\Extern
     exposed-modules:    User, UserTable, CreateDB, UserServant, ServantMain, PullUser,
-                        Movie, Favorite, Comment
+                        Movie, Favorite, Comment, MovieExtern, TMDbApi
 
 executable vivrelesseries
     import:           deps, warnings
