@@ -21,7 +21,7 @@ import qualified Data.Text as T
 import CreateDB
 import ServantMain
 import System.Environment (lookupEnv)
-import TMDbApi
+import TMDBApi
 import MovieExtern
 
 
@@ -42,17 +42,12 @@ main = do
 -- main :: IO ()
 -- main = do
 --   hSetEncoding stdout utf8
---   -- let bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNDg4YjI5MTkwMmNlMTkxNjEzODFkODM0Mjc2YTM4NiIsIm5iZiI6MTc0MjExODkzNC41NDQ5OTk4LCJzdWIiOiI2N2Q2YTAxNjE5MTg2OGM1NGZmMTg1ZTUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Kswy-QiOG6wTSXC-k6d04pp68zRR0lapT1bpcHCBLKc"
+--   -- let bearerToken = ""
 --   apiKey <- lookupEnv "API_KEY"
 
 --   case apiKey of
 --       Just key -> do
 --         let apiKeyT = T.pack key
 --         let movieTitle = "Arcane"
---         fetchMovie movieTitle apiKeyT >>= \case
---           Left err -> putStrLn $ "Erreur: " ++ show err
---           Right (TMDbResponse movies) -> do
---             putStrLn "Films trouvés :"
---             mapM_ (TIO.putStrLn . name) movies
---       Nothing  -> putStrLn "API Key not found!" 
+--         mapM_ (TIO.putStrLn . name) =<< getMovie
   

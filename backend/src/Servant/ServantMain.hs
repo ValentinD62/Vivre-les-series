@@ -17,12 +17,14 @@ import Data.Maybe (Maybe(..))
 import Network.Wai.Middleware.Cors (CorsResourcePolicy, simpleCorsResourcePolicy, cors, corsMethods, corsRequestHeaders, simpleHeaders)
 
 import UserServant
+import TMDBServant
 
 type API
     = SelectUsers
     :<|> SelectHugo
     :<|> SelectConnection
     :<|> InsertUser
+    :<|> SelectSerie
 
 handleServerApi  :: Server API
 handleServerApi 
@@ -30,6 +32,7 @@ handleServerApi
     :<|> handleSelectHugo
     :<|> handleSelectConnection
     :<|> handlePostUser
+    :<|> handleSelectSerie
 
 policy :: CorsResourcePolicy
 policy = simpleCorsResourcePolicy

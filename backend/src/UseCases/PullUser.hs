@@ -8,8 +8,8 @@ import Prelude.Compat
 import Prelude ()
 import Data.Text
 
-import UserTable
 import User
+import UserTable
 
 pullUser :: IO [User]
 pullUser = selectAllUser
