@@ -1,0 +1,22 @@
+.search-series-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-top: 1.5rem;
+  margin-right: .5rem;
+  margin-left: .5rem;
+}
+
+.search-series-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.search-series-results {
+  display: grid;
+  gap: 15px 12px;
+  grid-template-columns: auto auto auto;
+}

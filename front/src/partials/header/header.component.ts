@@ -11,13 +11,28 @@ export class HeaderComponent extends LitElement {
         this.dispatchEvent(new CustomEvent('showUserPage', { detail: eventDetail }));
     }
 
+    showAllSeriesPage() {
+        this.dispatchEvent(new CustomEvent('showAllSeries'));
+    }
+
+    showHomePage() {
+        this.dispatchEvent(new CustomEvent('showHomePage'));
+    }
+
+    private handleUpdateSearch(event: CustomEvent) {
+        this.dispatchEvent(new CustomEvent('updateSearch', {detail: event.detail.value}));
+    }
+
     render() {
         return html`
             <header class="header-container">
                 <div class="header-container__div-logo">
-                    <a href="/"><img src="logo_vivre_series.png" class="header-container__logo" alt="logo"></a>
+                    <a href="/"><img src="logo_vivre_series.png" class="header-container__logo" alt="logo" @click=${this.showHomePage}></a>
+                </div> 
+                <search-bar @updateSearch=${this.handleUpdateSearch}></search-bar>
+                <div class="header-container__div-series" @click="${this.showAllSeriesPage}">
+                    Les Séries
                 </div>
-                <search-bar></search-bar>
                 <div class="header-container__div-user" @click="${this.showUserPage}">
                     <img src="icons_user.png" class="header-container__user" alt="logo"></a>
                 </div>

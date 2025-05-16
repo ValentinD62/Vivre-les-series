@@ -1,5 +1,6 @@
-import {customElement, property, state} from "lit/decorators.js";
-import {html, css, LitElement, unsafeCSS, nothing, PropertyValues} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { getHeaders } from "../../route_function.ts";
+import { html, css, LitElement, unsafeCSS, nothing } from "lit";
 import UserCSS from "./user.scss?inline";
 
 
@@ -12,14 +13,22 @@ export class UserComponent extends LitElement {
     @state()
     hasAccount: boolean = false;
 
-    protected updated(_changedProperties: PropertyValues): void {
-        if (_changedProperties.has('isVisibleUserPopUp')) {
-            console.log('isVisibleUserPopUp changed:', this.isVisibleUserPopUp);
-        }
-    }
-
     handleHasAccount() {
         this.hasAccount = !this.hasAccount;
+    }
+
+    //Route Get pour vérifier que l'utilisateur est dans la BDD.
+    handleConnection(): void {
+        const header:Headers = getHeaders();
+        const request: RequestInfo = new Request("http://localhost:8080/users", {
+            method: 'GET',
+            headers: header
+        })
+    }
+
+    //Route POST pour créer l'utilisateur
+    handleInscription(): void {
+        const header:Headers = getHeaders();
     }
 
     renderComponent() {
@@ -29,7 +38,7 @@ export class UserComponent extends LitElement {
                     ${this.hasAccount ? html`Connexion` : html`Inscription`}
                 </div>
                 <div class="user-form-container__form-div">
-                    <form class="user-form-container__form">
+                    <form class="user-form-container__form" method=${this.hasAccount ? "GET" : "POST"}>
                         <div class="user-form-container__form-input">
                             <div class="user-form-container__form-input-pseudo">
                                 <label for="pseudo">Pseudo</label>
@@ -41,7 +50,9 @@ export class UserComponent extends LitElement {
                             </div>
                         </div>
                         <div class="user-form-container__form-btn">
-                            <button type="submit" id="submit">${this.hasAccount ? "Se connecter" : "S'inscrire"}</button>
+                            <button type="submit" id="submit" @click=${this.hasAccount ? this.handleConnection() : this.handleInscription()}>
+                                ${this.hasAccount ? "Se connecter" : "S'inscrire"}
+                            </button>
                         </div>
                     </form>
                 </div>

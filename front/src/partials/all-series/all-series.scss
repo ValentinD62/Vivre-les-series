@@ -1,0 +1,19 @@
+.all-series-container {
+  display: flex;
+  padding: 2rem;
+  flex-direction: column;
+
+  &__grid {
+    display: grid;
+    gap: 15px 12px;
+    grid-template-columns: auto auto auto;
+  }
+}
+
+@media (max-width: 780px) {
+  .all-series-container__grid {
+    display: flex;
+    gap: 25px 10px;
+    flex-direction: column;
+  }
+}

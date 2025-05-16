@@ -1,0 +1,36 @@
+.series-card-container {
+  display: flex;
+  padding: 2rem 2rem 1rem;
+  flex-direction: column;
+  border: 1px solid #444444;
+  border-radius: 25px;
+  cursor: pointer;
+
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__info-div-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background-color: #444444;
+    color: white;
+
+    & > .separator {
+      border-top: 3px #242424 solid;
+    }
+  }
+}
+
+
+.separator {
+  width: 100%;
+  height: 1px;
+  margin-top: 0.5rem;
+  border-top: 3px #444444 solid;
+}
