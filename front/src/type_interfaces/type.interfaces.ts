@@ -1,4 +1,4 @@
-interface User {
+export interface User {
     userId: number;
     userFirstName: string;
     userLastName: string;
@@ -6,7 +6,7 @@ interface User {
     userPicture: string;
 }
 
-interface Series {
+export interface Series {
     seriesId: number;
     seriesTitle: string;
     seriesDescription: string;
@@ -16,13 +16,13 @@ interface Series {
     seriesRating: number;
 }
 
-interface Favorites {
+export interface Favorites {
     favoriteId: number;
     userId: number;
     seriesId: number;
 }
 
-interface Comments {
+export interface Comments {
     commentId: number;
     userId: number;
     seriesId: number;
