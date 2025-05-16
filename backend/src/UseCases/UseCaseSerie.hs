@@ -14,3 +14,6 @@ import TMDBApi
 
 getMovie :: Text -> IO [MovieExtern]
 getMovie = getOutMovie 
+
+getSerieList :: IO [MovieExtern]
+getSerieList = getOutSerieList

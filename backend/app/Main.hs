@@ -23,6 +23,8 @@ import ServantMain
 import System.Environment (lookupEnv)
 import TMDBApi
 import MovieExtern
+import UseCaseSerie
+
 
 
 dbFilename :: String
@@ -32,22 +34,32 @@ dbFilename = "serie.db"
 -- | Serveur permettant de créer les routes pour l'accès à la bdd
 -- /comment/pull/:num/ Permet de récupérer un fichier json des commentaires en fonction de l'id du lieu
 -- /comment/create Permet d'ajouter un commentaire dans la base de donnée
+-- main :: IO ()
+-- main = do
+--   -- dbExists <- doesFileExist dbFilename
+--   -- conn <- sqliteOpen dbFilename
+--   -- when (not dbExists) $ runSeldaT dbInit conn
+--   -- run 8080 $ logStdoutDev app
+--   let apiKey = "486a09b6"
+--   let movieTitle = "%"
+--   result <- fetchMovie apiKey movieTitle
+--   case result of
+--     Left err  -> putStrLn $ "Erreur: " ++ show err
+--     Right movie -> print movie
+
+
 main :: IO ()
 main = do
+  hSetEncoding stdout utf8
+  apiKey <- lookupEnv "API_KEY"
   dbExists <- doesFileExist dbFilename
   conn <- sqliteOpen dbFilename
   when (not dbExists) $ runSeldaT dbInit conn
   run 8080 $ logStdoutDev app
+  case apiKey of
+      Just key -> do
+        let movieTitle = "Arcane"
+        mapM_ (TIO.putStrLn . name) =<< getMovie movieTitle
+      Nothing -> putStrLn "test"
 
--- main :: IO ()
--- main = do
---   hSetEncoding stdout utf8
---   -- let bearerToken = ""
---   apiKey <- lookupEnv "API_KEY"
-
---   case apiKey of
---       Just key -> do
---         let apiKeyT = T.pack key
---         let movieTitle = "Arcane"
---         mapM_ (TIO.putStrLn . name) =<< getMovie
   

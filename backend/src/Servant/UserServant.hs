@@ -22,6 +22,7 @@ import Prelude ()
 import UserTable
 import User
 import PullUser
+import Authentification
 
 type SelectUsers = "users" :> Get '[JSON][User]
 type SelectHugo = "user" :> Get '[JSON][User]
