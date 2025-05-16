@@ -22,8 +22,12 @@ import Prelude ()
 import MovieExtern
 
 type SelectSerie = "serie" :> Capture "titre" Text :> Get '[JSON][MovieExtern]
+type SelectSerieList = "series" :> Get '[JSON][MovieExtern]
 
 handleSelectSerie :: Text -> Handler [MovieExtern]
 handleSelectSerie titre = liftIO $ getMovie titre
+
+handleSelectSerieList :: Handler [MovieExtern]
+handleSelectSerieList = liftIO getSerieList 
 
 

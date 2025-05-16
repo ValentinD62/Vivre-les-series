@@ -25,6 +25,7 @@ type API
     :<|> SelectConnection
     :<|> InsertUser
     :<|> SelectSerie
+    :<|> SelectSerieList
 
 handleServerApi  :: Server API
 handleServerApi 
@@ -33,6 +34,7 @@ handleServerApi
     :<|> handleSelectConnection
     :<|> handlePostUser
     :<|> handleSelectSerie
+    :<|> handleSelectSerieList
 
 policy :: CorsResourcePolicy
 policy = simpleCorsResourcePolicy
