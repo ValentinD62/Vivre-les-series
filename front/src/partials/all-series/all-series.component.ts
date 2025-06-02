@@ -3,6 +3,7 @@ import {css, html, LitElement, unsafeCSS} from "lit";
 import AllSeriesCSS from "./all-series.scss?inline";
 import "../../components/series-card/series-card.component.ts";
 import "../../components/more-information/more-information.component.ts";
+import {getAllSeries} from "../../API/main.ts";
 
 //Composant pour la page de la liste de toutes les séries
 @customElement('all-series')
@@ -10,6 +11,9 @@ export class AllSeriesComponent extends LitElement {
 
   @state()
   idDescription: number = -1;
+
+  @state()
+  seriesList: any[] = [];
 
   private showDescription(event: CustomEvent) {
     this.idDescription = event.detail;
@@ -19,22 +23,24 @@ export class AllSeriesComponent extends LitElement {
     this.idDescription = -1;
   }
 
+  override firstUpdated() {
+    getAllSeries().then((data) => {
+        this.seriesList = data;
+    })
+        .catch((error) => {
+        console.error("Erreur lors de la récupération des séries :", error);
+    });
+  }
+
   render() {
-    console.log("showDescription", this.idDescription);
     return html`
             <div class="all-series-container">
-                <h1>Liste des séries</h1>
+                <h1>Liste des séries les mieux notés</h1>
                 <div class="all-series-container__grid">
-                    <series-card-component series-id="8" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="9" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="10" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="11" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="12" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="13" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="14" @showDescriptionVisible=${this.showDescription}></series-card-component>
+                  ${this.seriesList.map((series) => html`<series-card-component .series=${series} @showDescriptionVisible=${this.showDescription}></series-card-component>`)}
                 </div>
             </div>
-            ${this.idDescription !== -1 ? html`<more-information-component id-series="${this.idDescription}" @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
+            ${this.idDescription !== -1 ? html`<more-information-component .series="${this.idDescription}" @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
         `;
   }
 

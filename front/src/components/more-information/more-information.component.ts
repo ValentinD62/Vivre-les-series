@@ -30,6 +30,7 @@ export class MoreInformationComponent extends LitElement {
   };
 
   render() {
+    console.log("ui");
     //TODO Mettre la fonction pour prendre les informations de la série en fonction de l'id
     return html`
             <div class="more-information-container">

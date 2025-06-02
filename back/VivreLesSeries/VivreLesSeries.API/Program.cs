@@ -78,8 +78,8 @@ builder.Services.AddScoped<ISerieRepository, SerieRepository>();
 builder.Services.AddScoped<SerieService>();
 
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "VivreLesSeries.Repository", "Database", "VivreLesSeries.db");
-dbPath = Path.GetFullPath(dbPath); // Pour obtenir le chemin absolu correct
-// Vérifier si le fichier existe
+dbPath = Path.GetFullPath(dbPath); 
+
 if (!File.Exists(dbPath))
 {
     Console.WriteLine($"Erreur : La base de données SQLite n'a pas été trouvée à l'emplacement {dbPath}.");
@@ -89,16 +89,26 @@ if (!File.Exists(dbPath))
 builder.Services.AddDbContext<UserSerieContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 
 }
-
+app.UseCors("AllowFrontDev");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

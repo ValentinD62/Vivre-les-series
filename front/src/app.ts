@@ -5,11 +5,9 @@ import "./partials/body/body.component.ts"
 import "./components/user/user.component.ts"
 import "./partials/all-series/all-series.component.ts"
 import "./partials/search-series/search-series.component.ts"
-import { User } from "./type_interfaces/type.interfaces.ts"
 import { customElement, state } from "lit/decorators.js";
 import { css, html, LitElement, unsafeCSS } from "lit";
 import AppCSS from "./app.scss?inline";
-import { getHeaders } from "./route_function.ts";
 
 @customElement('app-component')
 export class AppComponent extends LitElement {
@@ -24,18 +22,6 @@ export class AppComponent extends LitElement {
 
     @state()
     isSearchVisible: boolean = false;
-
-    async getUsers(): Promise<User[]> {
-        const header = getHeaders();
-
-        const request: RequestInfo = new Request("http://localhost:8080/users", {
-            method: 'GET',
-            headers: header
-        })
-        const response = await fetch(request);
-        const data = await response.json();
-        return data as User[];
-    }
 
     showUserPopUp() {
         this.isVisibleUserPopUp = !this.isVisibleUserPopUp;
@@ -72,7 +58,6 @@ export class AppComponent extends LitElement {
     }
 
     render() {
-        console.log(this.getUsers());
         return html`
             <div class="app-container">
                 <header-component @showUserPage=${this.showUserPopUp}

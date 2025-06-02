@@ -12,7 +12,6 @@ export interface Series {
     seriesDescription: string;
     seriesPicture: string;
     seriesReleaseDate: string;
-    seriesDuration: number;
     seriesRating: number;
 }
 
