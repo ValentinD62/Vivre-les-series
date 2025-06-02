@@ -1,5 +1,4 @@
 import { customElement, property, state } from "lit/decorators.js";
-import { getHeaders } from "../../route_function.ts";
 import { html, css, LitElement, unsafeCSS, nothing } from "lit";
 import UserCSS from "./user.scss?inline";
 
@@ -15,20 +14,6 @@ export class UserComponent extends LitElement {
 
     handleHasAccount() {
         this.hasAccount = !this.hasAccount;
-    }
-
-    //Route Get pour vérifier que l'utilisateur est dans la BDD.
-    handleConnection(): void {
-        const header:Headers = getHeaders();
-        const request: RequestInfo = new Request("http://localhost:8080/users", {
-            method: 'GET',
-            headers: header
-        })
-    }
-
-    //Route POST pour créer l'utilisateur
-    handleInscription(): void {
-        const header:Headers = getHeaders();
     }
 
     renderComponent() {
@@ -50,7 +35,7 @@ export class UserComponent extends LitElement {
                             </div>
                         </div>
                         <div class="user-form-container__form-btn">
-                            <button type="submit" id="submit" @click=${this.hasAccount ? this.handleConnection() : this.handleInscription()}>
+                            <button type="submit" id="submit">
                                 ${this.hasAccount ? "Se connecter" : "S'inscrire"}
                             </button>
                         </div>

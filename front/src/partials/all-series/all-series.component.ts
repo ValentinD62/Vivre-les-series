@@ -15,6 +15,9 @@ export class AllSeriesComponent extends LitElement {
   @state()
   seriesList: any[] = [];
 
+  @state()
+  problem: boolean = false;
+
   private showDescription(event: CustomEvent) {
     this.idDescription = event.detail;
   }
@@ -26,8 +29,8 @@ export class AllSeriesComponent extends LitElement {
   override firstUpdated() {
     getAllSeries().then((data) => {
         this.seriesList = data;
-    })
-        .catch((error) => {
+    }).catch((error) => {
+        this.problem = true;
         console.error("Erreur lors de la récupération des séries :", error);
     });
   }
@@ -36,6 +39,7 @@ export class AllSeriesComponent extends LitElement {
     return html`
             <div class="all-series-container">
                 <h1>Liste des séries les mieux notés</h1>
+                ${this.problem ? html`<p class="all-series-container-error">Une erreur est survenue lors de la récupération des séries.</p>` : ""}
                 <div class="all-series-container__grid">
                   ${this.seriesList.map((series) => html`<series-card-component .series=${series} @showDescriptionVisible=${this.showDescription}></series-card-component>`)}
                 </div>

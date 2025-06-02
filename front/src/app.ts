@@ -1,5 +1,4 @@
 import "./assets/variable.scss";
-import "./my-element.ts"
 import "./partials/header/header.component.ts"
 import "./partials/body/body.component.ts"
 import "./components/user/user.component.ts"
@@ -38,6 +37,7 @@ export class AppComponent extends LitElement {
     }
 
     handleUpdateSearch(event: CustomEvent) {
+        console.log("change");
         this.inputValue = event.detail;
         if (this.inputValue !== "") {
             this.isAllSeriesVisible = false;
