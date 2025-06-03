@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VivreLesSeries.Core.Business;
 using VivreLesSeries.Entity;
+using VivreLesSeries.Entity.DTO;
 
 namespace VivreLesSeries.API.Controllers
 {
@@ -15,14 +16,24 @@ namespace VivreLesSeries.API.Controllers
 
         [HttpGet("serie/{serieId}")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Comment))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
         public async Task<IActionResult> GetComments(int serieId)
         {
             var comments = await _service.GetComments(serieId);
+            if (comments == null)
+            {
+                return StatusCode(500, new { message = "Problème à la création." });
+            }
             return Ok(comments);
         }
 
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Comment))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateComment([FromBody] CommentDto dto)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -39,16 +50,27 @@ namespace VivreLesSeries.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var success = await _service.DeleteComment(id);
             return success ? NoContent() : NotFound();
         }
 
-        public class CommentDto
+        [HttpPut("{id}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
+        public async Task<IActionResult> UpdateComment(int id, [FromBody] Comment updatedComment)
         {
-            public string Content { get; set; }
-            public int SerieId { get; set; }
+            var success = await _service.UpdateCommentAsync(id, updatedComment.Content);
+            if (!success)
+                return NotFound(new { message = "Commentaire introuvable." });
+
+            return Ok(new { message = "Commentaire mis à jour avec succès." });
         }
     }
 }

@@ -21,5 +21,14 @@ namespace VivreLesSeries.Business
         {
             return _repository.DeleteComment(commentId);
         }
+        public async Task<bool> UpdateCommentAsync(int id, string content)
+        {
+            var comment = await _repository.GetByIdAsync(id);
+            if (comment == null) return false;
+
+            comment.Content = content;
+            await _repository.UpdateAsync(comment);
+            return true;
+        }
     }
 }

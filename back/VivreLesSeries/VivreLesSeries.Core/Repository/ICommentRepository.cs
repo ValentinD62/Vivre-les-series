@@ -7,5 +7,7 @@ namespace VivreLesSeries.Core.Repository
         Task<IEnumerable<Comment>> GetCommentsBySerieId(int serieId);
         Task<Comment> AddComment(Comment comment);
         Task<bool> DeleteComment(int commentId);
+        Task<Comment?> GetByIdAsync(int id);
+        Task UpdateAsync(Comment comment);
     }
 }

@@ -7,5 +7,6 @@ namespace VivreLesSeries.Core.Business
         Task<IEnumerable<Comment>> GetComments(int serieId);
         Task<Comment> CreateComment(Comment comment);
         Task<bool> DeleteComment(int commentId);
+        Task<bool> UpdateCommentAsync(int id, string content);
     }
 }

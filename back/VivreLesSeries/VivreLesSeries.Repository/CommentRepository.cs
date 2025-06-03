@@ -33,5 +33,16 @@ namespace VivreLesSeries.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Comment?> GetByIdAsync(int id)
+        {
+            return await _context.Comments.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(Comment comment)
+        {
+            _context.Comments.Update(comment);
+            await _context.SaveChangesAsync();
+        }
     }
 }

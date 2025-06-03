@@ -89,7 +89,9 @@ namespace VivreLesSeries.API.Controllers
         }
 
         [HttpPost("{serieId}/rating")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
@@ -111,8 +113,10 @@ namespace VivreLesSeries.API.Controllers
         }
 
         [HttpDelete("{serieId}/rating")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
         public async Task<IActionResult> DeleteRating(int serieId, string sessionId)
