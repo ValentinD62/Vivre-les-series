@@ -1,13 +1,14 @@
 .more-information-container {
+  position: fixed;
   background-color: #444444;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   z-index: 10;
   width: 80%;
-  position: absolute;
-  top: 25%;
+  top: 10%;
   left: 10%;
   border-radius: 25px;
   border: 1px solid #E1E7F5;

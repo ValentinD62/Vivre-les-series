@@ -2,6 +2,7 @@ import {customElement, property, state} from "lit/decorators.js";
 import {css, html, LitElement, unsafeCSS} from "lit";
 import SeriesCardCSS from "./series-card.scss?inline";
 import "../../components/more-information/more-information.component.ts"
+import {checkImage} from "../../shared/function.ts";
 
 @customElement('series-card-component')
 export class SeriesCardComponent extends LitElement {
@@ -25,6 +26,17 @@ export class SeriesCardComponent extends LitElement {
   }
 
   render() {
+    if(this.series.id !== 0) {
+      checkImage(this.series.backdrop_path).then((isImageValid) => {
+        if (!isImageValid) {
+          this.series.backdrop_path = "/src/assets/no_image.png";
+        }
+      });
+    }
+    //No img for this serie
+    if (this.series.backdrop_path === "https://image.tmdb.org/t/p/w1920") {
+      this.series.backdrop_path = "/src/assets/no_image.png";
+    }
     return html`
             <div class="series-card-container" @click=${this.displayMoreInformation}>
                 <img src="${this.series.backdrop_path}" alt="nom de la serie"/>

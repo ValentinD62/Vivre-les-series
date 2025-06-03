@@ -8,7 +8,9 @@
 
   & img {
     max-width: 100%;
-    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    height: 150px;
   }
 
   &__info-div-title {

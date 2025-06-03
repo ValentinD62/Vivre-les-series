@@ -10,7 +10,7 @@ import {getAllSeries} from "../../API/main.ts";
 export class AllSeriesComponent extends LitElement {
 
   @state()
-  idDescription: number = -1;
+  selectedSerie: any = {};
 
   @state()
   seriesList: any[] = [];
@@ -18,12 +18,18 @@ export class AllSeriesComponent extends LitElement {
   @state()
   problem: boolean = false;
 
+  @state()
+  showMoreInformation: boolean = false;
+
   private showDescription(event: CustomEvent) {
-    this.idDescription = event.detail;
+    console.log("showDescription", event.detail);
+    this.selectedSerie = event.detail;
+    this.showMoreInformation = true;
   }
 
   private notShowDescription(){
-    this.idDescription = -1;
+    this.selectedSerie = {};
+    this.showMoreInformation = false;
   }
 
   override firstUpdated() {
@@ -44,7 +50,7 @@ export class AllSeriesComponent extends LitElement {
                   ${this.seriesList.map((series) => html`<series-card-component .series=${series} @showDescriptionVisible=${this.showDescription}></series-card-component>`)}
                 </div>
             </div>
-            ${this.idDescription !== -1 ? html`<more-information-component .series="${this.idDescription}" @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
+            ${this.showMoreInformation ? html`<more-information-component .series=${this.selectedSerie} @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
         `;
   }
 

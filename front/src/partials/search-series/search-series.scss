@@ -7,6 +7,14 @@
   margin-top: 1.5rem;
   margin-right: .5rem;
   margin-left: .5rem;
+
+  &-error {
+    color: #980e0e;
+    font-size: 2rem;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
 }
 
 .search-series-title {

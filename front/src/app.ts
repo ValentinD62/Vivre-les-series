@@ -37,7 +37,6 @@ export class AppComponent extends LitElement {
     }
 
     handleUpdateSearch(event: CustomEvent) {
-        console.log("change");
         this.inputValue = event.detail;
         if (this.inputValue !== "") {
             this.isAllSeriesVisible = false;

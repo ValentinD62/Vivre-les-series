@@ -39,7 +39,10 @@ namespace VivreLesSeries.Repository
             var response = await _httpClient.GetFromJsonAsync<TmdbResponse>(url);
             if (response?.Results != null)
             {
-                response.Results[0].ImagePath = $"https://image.tmdb.org/t/p/w1920{response.Results[0].ImagePath}";
+                for (int i = 0; i < response.Results.Count; i++)
+                {
+                    response.Results[i].ImagePath = $"https://image.tmdb.org/t/p/w1920{response.Results[i].ImagePath}";
+                }
             }
             return response?.Results ?? new List<Serie>();
         }

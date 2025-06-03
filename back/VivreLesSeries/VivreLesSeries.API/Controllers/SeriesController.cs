@@ -33,7 +33,7 @@ namespace VivreLesSeries.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/searchbyname/{name}")]
+        [HttpGet("searchbyname/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Serie>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
@@ -51,7 +51,7 @@ namespace VivreLesSeries.API.Controllers
             return Ok(series);
         }
         [AllowAnonymous]
-        [HttpGet("/searchbyid/{id}")]
+        [HttpGet("searchbyid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Serie))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
@@ -70,7 +70,7 @@ namespace VivreLesSeries.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/image/{id}")]
+        [HttpGet("image/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]

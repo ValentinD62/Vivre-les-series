@@ -1,44 +1,74 @@
 import {customElement, property, state} from "lit/decorators.js";
 import {html, css, LitElement, unsafeCSS } from "lit";
 import SearchSeriesCSS from "./search-series.scss?inline";
+import { getSeriesByName } from "../../API/main.ts";
+import { debounce } from "../../shared/function.ts";
 
 //Composant pour la page de recherche de série
 @customElement('search-series')
 export class SearchSeriesComponent extends LitElement {
-  @property({ type: Object, attribute: false })
-  readonly inputData!: any;
 
   @property({ type: String, attribute: "input-value" })
   inputValue: string = "";
 
   @state()
-  idDescription: number = -1;
+  selectedSerie: any = {};
+
+  @state()
+  seriesList: any[] = [];
+
+  @state()
+  problem: boolean = false;
+
+  @state()
+  showMoreInformation: boolean = false;
+
+  @state()
+  loading: boolean = true;
 
   private showDescription(event: CustomEvent) {
-    this.idDescription = event.detail;
+    this.selectedSerie = event.detail;
+    this.showMoreInformation = true;
   }
 
   private notShowDescription(){
-    this.idDescription = -1;
+    this.selectedSerie = {};
+    this.showMoreInformation = false;
+  }
+
+  private debouncedFetchSeries = debounce((value: string) => {
+    getSeriesByName(value).then((data) => {
+      this.seriesList = data;
+      this.problem = false;
+      this.loading = false;
+    }).catch((error) => {
+      this.problem = true;
+      this.loading = false;
+      console.error("Erreur lors de la récupération des séries :", error);
+    });
+  }, 2000);
+
+  override updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('inputValue')) {
+      this.loading = true;
+      this.debouncedFetchSeries(this.inputValue);
+    }
   }
 
   render() {
     return html`
             <div class="search-series-container">
                 <div class="search-series-title">
-                    Résultat pour la recherche pour "${this.inputValue}"
+                  ${this.loading ? html`<p class="search-series-container-loading">Chargement des séries...</p>` : html`
+                    ${this.seriesList.length === 0 ? html`<p class="search-series-container-error">Il n'y a pas de séries dans votre sélection</p>` : ""}
+                    ${this.problem ? html`<p class="search-series-container-error">Une erreur est survenue lors de la récupération des séries.</p>` : ""}
+                  `}
                 </div>
                 <div class="search-series-results">
-                    <series-card-component series-id="1" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="2" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="3" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="4" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="5" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="6" @showDescriptionVisible=${this.showDescription}></series-card-component>
-                    <series-card-component series-id="7" @showDescriptionVisible=${this.showDescription}></series-card-component>
+                  ${this.seriesList.map((series) => html`<series-card-component .series=${series} @showDescriptionVisible=${this.showDescription}></series-card-component>`)}
                 </div>
             </div>
-            ${this.idDescription !== -1 ? html`<more-information-component id-series="${this.idDescription}" @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
+            ${this.showMoreInformation ? html`<more-information-component .series="${this.selectedSerie}" @notDisplayMoreInformation=${this.notShowDescription} ></more-information-component>` : ""}
         `;
   }
   static styles = css`${unsafeCSS(SearchSeriesCSS)}`;
