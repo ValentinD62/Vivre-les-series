@@ -16,6 +16,7 @@ namespace VivreLesSeries.Repository
         public SerieRepository()
         {
             _httpClient = new HttpClient();
+            //Obligatoire pour appeler l'API
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", BearerToken);
         }
 

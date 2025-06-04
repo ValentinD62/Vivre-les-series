@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using VivreLesSeries.Repository.Context;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,38 +19,45 @@ public class UsersController : ControllerBase
     private readonly IUserSessionService _userSessionService;
     private readonly UserSerieContext _userSerieContext;
 
-    public UsersController(IUserRepository userRepository)
+    public UsersController(IUserRepository userRepository, UserSerieContext context)
     {
         _userRepository = userRepository;
+        _userSerieContext = context;
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Object))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
     public IActionResult Login([FromBody] UserDto dto)
     {
-        if (dto.Name == "admin" && dto.Password == "password")
+        var user = _userRepository.LoginAsync(dto.Name, dto.Password);
+
+        if (user?.Result?.Name == null)
+            return BadRequest("Identifiants invalides.");
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes("Cl3OuJ3SaisPasQuo1M3ttr3MaisS3cur1s3DeFouAv3cD3sNombr3s");
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("Cl3OuJ3SaisPasQuo1M3ttr3MaisS3cur1s3DEFouAv3cD3sNombr3s");
-            var tokenDescriptor = new SecurityTokenDescriptor
+            Subject = new ClaimsIdentity(new[]
             {
-                Subject = new ClaimsIdentity(new[]
-                {
                 new Claim(ClaimTypes.Name, dto.Name)
             }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = "VivreLesSeriesAPI",
-                Audience = "VivreLesSeriesClient",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var jwt = tokenHandler.WriteToken(token);
-            return Ok(new { token = jwt });
-        }
-
-        return Unauthorized();
+            Expires = DateTime.UtcNow.AddHours(1),
+            Issuer = "VivreLesSeriesAPI",
+            Audience = "VivreLesSeriesClient",
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwt = tokenHandler.WriteToken(token);
+        return Ok(new { token = jwt, id = user?.Result?.Id });
     }
 
     [HttpPost("createuser")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Object))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         if (await _userSerieContext.Users.AnyAsync(u => u.Name == userDto.Name))
@@ -60,8 +68,24 @@ public class UsersController : ControllerBase
             Name = userDto.Name,
             Password = userDto.Password
         };
-        await _userRepository.CreateUserAsync(user);
-        return Ok("Utilisateur créé avec succès.");
+        var createdUser = await _userRepository.CreateUserAsync(user);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes("Cl3OuJ3SaisPasQuo1M3ttr3MaisS3cur1s3DeFouAv3cD3sNombr3s");
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, user.Name)
+            }),
+            Expires = DateTime.UtcNow.AddHours(1),
+            Issuer = "VivreLesSeriesAPI",
+            Audience = "VivreLesSeriesClient",
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwt = tokenHandler.WriteToken(token);
+
+        return Ok(new { token = jwt, id = createdUser.Id });
     }
 
     [HttpPost("{userId}/sessions")]

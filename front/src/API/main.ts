@@ -23,3 +23,41 @@ export async function getSeriesByName(name: string): Promise<any> {
     }
     return await response.json();
 }
+
+export async function getSeriesById(id: number): Promise<any> {
+    const request: RequestInfo = new Request(`${API_BASE_URL}/Series/searchbyid/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const response = await fetch(request);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+}
+
+export async function postCreateUser(name: string, password: string): Promise<any> {
+    const request: RequestInfo = new Request(`${API_BASE_URL}/Users/createuser`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, password }),
+    });
+    const response = await fetch(request);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+}
+
+export async function postLoginUser(name: string, password: string): Promise<any> {
+    const request: RequestInfo = new Request(`${API_BASE_URL}/Users/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, password }),
+    });
+    const response = await fetch(request);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+}

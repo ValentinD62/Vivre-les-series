@@ -22,7 +22,6 @@ export class AllSeriesComponent extends LitElement {
   showMoreInformation: boolean = false;
 
   private showDescription(event: CustomEvent) {
-    console.log("showDescription", event.detail);
     this.selectedSerie = event.detail;
     this.showMoreInformation = true;
   }

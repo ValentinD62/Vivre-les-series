@@ -4,6 +4,7 @@ using VivreLesSeries.Repository;
 using VivreLesSeries.Core.Repository;
 using VivreLesSeries.Entity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace VivreLesSeries.API.Controllers
 {
@@ -11,10 +12,12 @@ namespace VivreLesSeries.API.Controllers
     [Route("api/[controller]")]
     public class SeriesController : ControllerBase
     {
+        private readonly IMemoryCache _cache;
         private readonly SerieService _serieService;
 
-        public SeriesController()
+        public SeriesController(IMemoryCache cache)
         {
+            _cache = cache;
             ISerieRepository repo = new SerieRepository();
             _serieService = new SerieService(repo);
         }
@@ -25,7 +28,19 @@ namespace VivreLesSeries.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
         public async Task<IActionResult> GetTopRated()
         {
-            var series = await _serieService.GetTopRatedSeriesAsync();
+            const string cacheKey = "TopRatedSeries";
+
+            if (!_cache.TryGetValue(cacheKey, out List<Serie> series))
+            {
+                series = await _serieService.GetTopRatedSeriesAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                _cache.Set(cacheKey, series, cacheEntryOptions);
+            }
+
+           
             if(series == null) {
                 return StatusCode(500, new { message = "Erreur lors de la requête." });
             }
@@ -39,6 +54,7 @@ namespace VivreLesSeries.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         public async Task<IActionResult> GetSeriesByName(string name)
         {
+            //Pas besoin de cache
             if (name.Length == 0)
             {
                 return BadRequest(new ResponseMessage { Message = "Merci d'indiquer un nom de série" });
@@ -57,16 +73,26 @@ namespace VivreLesSeries.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         public async Task<IActionResult> GetSerieById(int id)
         {
-            if (id == 0)
+            string cacheKey = $"serie_{id}";
+            if (!_cache.TryGetValue(cacheKey, out Serie serie))
             {
-                return BadRequest(new ResponseMessage { Message = "Problème d'identifiant" });
+                if (id == 0)
+                {
+                    return BadRequest(new ResponseMessage { Message = "Problème d'identifiant" });
+                }
+                serie = await _serieService.GetSerieByIdAsync(id);
+                if (serie == null)
+                {
+                    return NotFound(new { message = "Aucune serie correspondante." });
+                }
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                _cache.Set(cacheKey, serie, cacheEntryOptions);
             }
-            var series = await _serieService.GetSerieByIdAsync(id);
-            if( series == null)
-            {
-                return NotFound(new { message = "Aucune serie correspondante." });
-            }
-            return Ok(series);
+            
+            return Ok(serie);
         }
 
         [AllowAnonymous]

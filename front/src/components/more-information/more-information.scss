@@ -10,15 +10,14 @@
   width: 80%;
   top: 10%;
   left: 10%;
-  border-radius: 25px;
+  border-radius: 20px;
   border: 1px solid #E1E7F5;
+  max-height: 80%;
 
   &__title-serie {
     padding-top: .5rem;
     padding-bottom: .5rem;
     background-color: #2E51A2;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
     width: 100%;
     height: 10%;
 
@@ -46,7 +45,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 400px;
+    height: 350px;
     width: 100%;
 
     &::before {

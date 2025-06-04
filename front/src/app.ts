@@ -4,6 +4,7 @@ import "./partials/body/body.component.ts"
 import "./components/user/user.component.ts"
 import "./partials/all-series/all-series.component.ts"
 import "./partials/search-series/search-series.component.ts"
+import "./partials/footer/footer.component.ts"
 import { customElement, state } from "lit/decorators.js";
 import { css, html, LitElement, unsafeCSS } from "lit";
 import AppCSS from "./app.scss?inline";
@@ -21,6 +22,9 @@ export class AppComponent extends LitElement {
 
     @state()
     isSearchVisible: boolean = false;
+
+    @state()
+    isConnected: boolean = false;
 
     showUserPopUp() {
         this.isVisibleUserPopUp = !this.isVisibleUserPopUp;
@@ -56,6 +60,12 @@ export class AppComponent extends LitElement {
         }
     }
 
+    handleConnected() {
+        console.log("ici");
+        this.isVisibleUserPopUp = false;
+        this.isConnected = !this.isConnected;
+    }
+
     render() {
         return html`
             <div class="app-container">
@@ -63,9 +73,11 @@ export class AppComponent extends LitElement {
                                   @showAllSeries=${this.showAllSeries}
                                   @showHomePage=${this.showBody}
                                   @updateSearch=${this.handleUpdateSearch}
+                                  ?connected="${this.isConnected}"
                 ></header-component>
-                <user-form ?is-visible-user-pop-up="${this.isVisibleUserPopUp}"></user-form>
+                <user-form ?is-visible-user-pop-up="${this.isVisibleUserPopUp}" @connected="${this.handleConnected}"></user-form>
                 ${this.renderPages()}
+                <footer-component></footer-component>
             </div>
         `;
     }

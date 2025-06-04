@@ -31,8 +31,9 @@ export class MoreInformationComponent extends LitElement {
   }
 
   private handleOutsideClick = (event: MouseEvent): void => {
-    const target = event.target as Node;
-    if (!this.contains(target)) {
+    const path = event.composedPath();
+    // Cherche si la modale (this) fait partie du chemin du clic
+    if (!path.includes(this)) {
       this.dispatchEvent(new CustomEvent('notDisplayMoreInformation'));
     }
   };
@@ -56,7 +57,6 @@ export class MoreInformationComponent extends LitElement {
                 </div>
                 <div class="more-information-container__information-div">
                     <div class="more-information-container__img-div" style="background-image: url(${this.series.backdrop_path});">
-                        <!--<img src="/src/assets/test_img.png" alt="nom de la serie"/>-->
                     </div>
                     <div class="more-information-container__description-div">
                         <h2>Description de la série : </h2>
@@ -65,7 +65,7 @@ export class MoreInformationComponent extends LitElement {
                 </div>
                 <div class="separator"></div>
                 <div class="more-information-container__footer">
-                    Commentaire ?
+                    Laissez un commentaire ?
                 </div>
             </div>
         `;

@@ -14,6 +14,12 @@ namespace VivreLesSeries.Repository
             _context = context;
         }
 
+        public async Task<User> LoginAsync(string name, string password)
+        {
+            var searchUser = await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Password == password);
+            return searchUser ?? new User();
+        }
+
         public async Task<User> CreateUserAsync(User user)
         {
             _context.Users.Add(user);
@@ -47,6 +53,5 @@ namespace VivreLesSeries.Repository
             await _context.SaveChangesAsync();
             return session;
         }
-
     }
 }
