@@ -36,14 +36,20 @@ namespace VivreLesSeries.Business
             return listPath;
         }
 
+        public async Task<Rating?> GetRatingByUserAndSerieAsync(int userId, int serieId)
+        {
+            var rating = await _repository.GetRatingByUserAndSerieAsync(userId, serieId);
+            return rating;
+        }
+
         public async Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating)
         {
             return await _repository.AddRatingAsync(serieId, rating);
         }
 
-        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId)
+        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId, int userId)
         {
-            return await _repository.DeleteRatingAsync(serieId);
+            return await _repository.DeleteRatingAsync(serieId, userId);
         }
     }
 }

@@ -90,7 +90,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ISerieRepository, SerieRepository>();
 
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
 builder.Services.AddScoped<SerieService>();
+builder.Services.AddScoped<CommentService>();
 
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "VivreLesSeries.Repository", "Database", "VivreLesSeries.db");
 dbPath = Path.GetFullPath(dbPath); 

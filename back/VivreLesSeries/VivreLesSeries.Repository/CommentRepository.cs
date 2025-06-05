@@ -13,9 +13,15 @@ namespace VivreLesSeries.Repository
         public async Task<IEnumerable<Comment>> GetCommentsBySerieId(int serieId)
         {
             return await _context.Comments
-                .Include(c => c.User)
                 .Where(c => c.SerieId == serieId)
                 .ToListAsync();
+        }
+
+        public async Task<Comment?> GetUserComment(int serieId, int userId)
+        {
+            var commentExists = await _context.Comments
+                .FirstOrDefaultAsync(c => c.SerieId == serieId && c.UserId == userId);
+            return commentExists;
         }
 
         public async Task<Comment> AddComment(Comment comment)

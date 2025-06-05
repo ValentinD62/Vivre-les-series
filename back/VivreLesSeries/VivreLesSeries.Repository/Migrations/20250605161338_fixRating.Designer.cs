@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VivreLesSeries.Repository.Context;
 
@@ -10,9 +11,11 @@ using VivreLesSeries.Repository.Context;
 namespace VivreLesSeries.Repository.Migrations
 {
     [DbContext(typeof(UserSerieContext))]
-    partial class UserSerieContextModelSnapshot : ModelSnapshot
+    [Migration("20250605161338_fixRating")]
+    partial class fixRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
@@ -38,6 +41,10 @@ namespace VivreLesSeries.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SerieId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Comments");
                 });
 
@@ -62,6 +69,42 @@ namespace VivreLesSeries.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rating");
+                });
+
+            modelBuilder.Entity("VivreLesSeries.Entity.Serie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "overview");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "backdrop_path");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "name");
+
+                    b.Property<string>("ReleasingDate")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "first_air_date");
+
+                    b.Property<double>("VoteAverage")
+                        .HasColumnType("REAL")
+                        .HasAnnotation("Relational:JsonPropertyName", "vote_average");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Serie");
                 });
 
             modelBuilder.Entity("VivreLesSeries.Entity.User", b =>
@@ -104,6 +147,25 @@ namespace VivreLesSeries.Repository.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSessions");
+                });
+
+            modelBuilder.Entity("VivreLesSeries.Entity.Comment", b =>
+                {
+                    b.HasOne("VivreLesSeries.Entity.Serie", "Serie")
+                        .WithMany()
+                        .HasForeignKey("SerieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VivreLesSeries.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Serie");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VivreLesSeries.Entity.UserSession", b =>

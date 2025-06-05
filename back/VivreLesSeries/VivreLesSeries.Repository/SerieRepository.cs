@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using VivreLesSeries.Core.Repository;
 using VivreLesSeries.Entity;
-using VivreLesSeries.Entity.DTO;
 using System.Text.Json;
 using System.Text;
 using System.Net.Http.Headers;
@@ -77,6 +76,11 @@ namespace VivreLesSeries.Repository
             }
             return path;
         }
+        public async Task<Rating?> GetRatingByUserAndSerieAsync(int userId, int serieId)
+        {
+            return await _context.Rating
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.SerieId == serieId);
+        }
 
         public async Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating)
         {
@@ -88,17 +92,35 @@ namespace VivreLesSeries.Repository
 
             var response = await _httpClient.PostAsync(url, content);
 
-            //On l'ajoute également à la base de données
-            _context.Rating.Add(rating);
-            await _context.SaveChangesAsync();
+            // Vérifie s'il y a déjà une note pour cet utilisateur et cette série
+            var ratingExists = await _context.Rating
+                .AnyAsync(r => r.UserId == rating.UserId && r.SerieId == rating.SerieId);
+
+            if (ratingExists)
+            {
+                response.StatusCode = HttpStatusCode.Forbidden;
+            } else
+            {
+                //On l'ajoute également à la base de données
+                _context.Rating.Add(rating);
+                await _context.SaveChangesAsync();
+            }
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId)
+        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId, int userId)
         {
             var url = $"https://api.themoviedb.org/3/tv/{serieId}/rating";
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await _httpClient.SendAsync(request);
+
+            var rating = await _context.Rating.FirstOrDefaultAsync(r => r.UserId == userId && r.SerieId == serieId);
+
+            if (rating == null)
+                return HttpStatusCode.NotFound;
+
+            _context.Rating.Remove(rating);
+            await _context.SaveChangesAsync();
 
             return response.StatusCode;
         }

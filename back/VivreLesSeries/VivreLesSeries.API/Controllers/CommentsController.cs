@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using VivreLesSeries.Core.Business;
+using VivreLesSeries.Business;
 using VivreLesSeries.Entity;
 using VivreLesSeries.Entity.DTO;
 
@@ -11,8 +11,8 @@ namespace VivreLesSeries.API.Controllers
     [Route("api/comments")]
     public class CommentsController : ControllerBase
     {
-        private readonly ICommentService _service;
-        public CommentsController(ICommentService service) { _service = service; }
+        private readonly CommentService _service;
+        public CommentsController(CommentService service) { _service = service; }
 
         [HttpGet("serie/{serieId}")]
         [AllowAnonymous]
@@ -28,6 +28,16 @@ namespace VivreLesSeries.API.Controllers
             return Ok(comments);
         }
 
+        [HttpGet("serie/{serieId}/{userId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Comment))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
+        public async Task<IActionResult> GetUserComments(int serieId, int userId)
+        {
+            var comment = await _service.GetUserComment(serieId, userId);
+            return Ok(comment);
+        }
+
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Comment))]
@@ -36,12 +46,11 @@ namespace VivreLesSeries.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateComment([FromBody] CommentDto dto)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var comment = new Comment
             {
                 Content = dto.Content,
                 CreatedAt = DateTime.UtcNow,
-                UserId = userId,
+                UserId = dto.UserId,
                 SerieId = dto.SerieId
             };
             var created = await _service.CreateComment(comment);

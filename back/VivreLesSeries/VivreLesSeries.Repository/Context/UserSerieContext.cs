@@ -19,10 +19,6 @@ namespace VivreLesSeries.Repository.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Sessions)
-                .WithOne(s => s.User)
-                .HasForeignKey(s => s.UserId);
         }
     }
 }

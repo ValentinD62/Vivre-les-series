@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using VivreLesSeries.Core.Business;
 using System.Security.Claims;
 using VivreLesSeries.Repository.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace VivreLesSeries.API.Controllers
 {
@@ -117,14 +118,29 @@ namespace VivreLesSeries.API.Controllers
             return Ok(path);
         }
 
+        [HttpGet("/rating")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Rating))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
+        public async Task<IActionResult> GetRatingByUserIdSerieId(int serieId, int userId)
+        {
+            var rating = await _serieService.GetRatingByUserAndSerieAsync(userId, serieId);
+            if (rating == null)
+            {
+                return NotFound("Note non trouvée.");
+            }
+            return Ok(rating);
+        }
+
         [HttpPost("{serieId}/rating")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
-        public async Task<IActionResult> AddRating(int serieId,[FromBody] RatingDto rating)
+        public async Task<IActionResult> AddRating(int serieId,[FromBody] RatingDto rating, int userId)
         {
             try
             {
@@ -132,7 +148,7 @@ namespace VivreLesSeries.API.Controllers
                 {
                     return BadRequest(new ResponseMessage { Message = "La note doit être entre 0.5 et 10.0." });
                 }
-                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                
                 var newRating = new Rating
                 {
                     Value = rating.Value,
@@ -140,6 +156,7 @@ namespace VivreLesSeries.API.Controllers
                     UserId = userId,
                     SerieId = serieId
                 };
+                Console.WriteLine(newRating.ToString());
                 var success = await _serieService.AddRatingAsync(serieId, newRating);
                 if (success == System.Net.HttpStatusCode.Created)
                     return StatusCode(201);
@@ -147,6 +164,8 @@ namespace VivreLesSeries.API.Controllers
                     return NotFound(new ResponseMessage { Message = "Le service ne peut pas trouver la série." });
                 else if (success == System.Net.HttpStatusCode.BadRequest)
                     return BadRequest(new ResponseMessage { Message = "Il y a un problème dans la série ou dans la note donnée." });
+                else if (success == System.Net.HttpStatusCode.Forbidden)
+                    return StatusCode(403, new ResponseMessage { Message = "Il y a déjà une note pour cet utilisateur." });
             }
             catch (Exception ex)
             {
@@ -157,16 +176,16 @@ namespace VivreLesSeries.API.Controllers
 
         }
 
-        [HttpDelete("{serieId}/rating")]
+        [HttpDelete("/rating")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
-        public async Task<IActionResult> DeleteRating(int serieId)
+        public async Task<IActionResult> DeleteRating(int serieId, int userId)
         {
-            var success = await _serieService.DeleteRatingAsync(serieId);
+            var success = await _serieService.DeleteRatingAsync(serieId, userId);
             if (success == System.Net.HttpStatusCode.OK)
                 return Ok(new ResponseMessage { Message = "Note supprimée avec succès." });
             else if (success == System.Net.HttpStatusCode.NotFound)

@@ -13,6 +13,10 @@ namespace VivreLesSeries.Business
         {
             return _repository.GetCommentsBySerieId(serieId);
         }
+        public Task<Comment?> GetUserComment(int serieId, int userId)
+        {
+            return _repository.GetUserComment(serieId, userId);
+        }
         public Task<Comment> CreateComment(Comment comment)
         {
             return _repository.AddComment(comment);
