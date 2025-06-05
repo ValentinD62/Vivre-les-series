@@ -1,3 +1,5 @@
+@import '../../assets/variable.scss';
+
 .more-information-container {
   position: fixed;
   background-color: #444444;
@@ -8,7 +10,7 @@
   justify-content: space-between;
   z-index: 10;
   width: 80%;
-  top: 10%;
+  top: 8%;
   left: 10%;
   border-radius: 20px;
   border: 1px solid #E1E7F5;
@@ -66,7 +68,42 @@
     width: 100%;
   }
 
-  &__footer {
-
+  &__rating-div {
+    font-size: 1.2rem;
+    display: flex;
+    margin-top: 1rem;
+    width: 95%;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
   }
+
+  &__actual-rating {
+    width: 30%;
+  }
+
+  &__rating-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 70%;
+    margin-top: 1rem;
+    & input {
+      color: $black-color;
+      background-color: $disabled-color;
+    }
+  }
+
+  &__rating-question {
+    font-weight: bold;
+    margin-left: .5rem;
+    margin-right: 0.5rem;
+  }
+}
+.separator {
+  width: 80%;
+  height: 1px;
+  margin-top: 0.5rem;
+  border-top: 3px black solid;
 }

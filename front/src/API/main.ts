@@ -61,3 +61,16 @@ export async function postLoginUser(name: string, password: string): Promise<any
     }
     return await response.json();
 }
+
+export async function postRateSerie(serieId: number, userId: number, rating: number): Promise<any> {
+    const request: RequestInfo = new Request(`${API_BASE_URL}/Series/${serieId}/rating`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, rating }),
+    });
+    const response = await fetch(request);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+}

@@ -38,6 +38,14 @@ export class MoreInformationComponent extends LitElement {
     }
   };
 
+  private submitRating() {
+
+  }
+
+  private submitComment() {
+
+  }
+
   render() {
     if(this.series.id !== 0) {
       checkImage(this.series.backdrop_path).then((isImageValid) => {
@@ -64,9 +72,29 @@ export class MoreInformationComponent extends LitElement {
                     </div>
                 </div>
                 <div class="separator"></div>
-                <div class="more-information-container__footer">
-                    Laissez un commentaire ?
+                <div class="more-information-container__rating-div">
+                    <div class="more-information-container__actual-rating">
+                      Note actuelle: ${this.series.vote_average} / 10
+                    </div>
+                    <div class="more-information-container__rating-form">
+                      <span class="more-information-container__rating-question"> Laissez une note ? </span>
+                        <form id="rating-form" @submit=${this.submitRating}>
+                          <input type="number" min="0" max="10" step="0.1" name="rating" placeholder="Note (0-10)" required>
+                          <button type="submit">Envoyer</button>
+                        </form>
+                    </div>
                 </div>
+              <div class="separator"></div>
+                <div class="more-information-container__comment-div">
+                  <h2> Laissez un commentaire ?</h2>
+                  <form id="comment-form" @submit=${this.submitComment}>
+                    <textarea name="comment" placeholder="Votre commentaire" required></textarea>
+                    <button type="submit">Envoyer</button>
+                  </form>
+                </div>
+              <div class="more-information-container__all-comment-div">
+                <span> Tous les commentaires </span>
+              </div>
             </div>
         `;
   }

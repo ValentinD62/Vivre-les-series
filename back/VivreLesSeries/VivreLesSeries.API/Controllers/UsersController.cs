@@ -37,17 +37,20 @@ public class UsersController : ControllerBase
             return BadRequest("Identifiants invalides.");
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes("Cl3OuJ3SaisPasQuo1M3ttr3MaisS3cur1s3DeFouAv3cD3sNombr3s");
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, dto.Name)
             }),
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires = DateTime.UtcNow.AddHours(2),
             Issuer = "VivreLesSeriesAPI",
             Audience = "VivreLesSeriesClient",
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
+
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwt = tokenHandler.WriteToken(token);
         return Ok(new { token = jwt, id = user?.Result?.Id });

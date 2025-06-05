@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using VivreLesSeries.Entity;
+using VivreLesSeries.Entity.DTO;
 
 namespace VivreLesSeries.Core.Repository
 {
@@ -9,7 +10,7 @@ namespace VivreLesSeries.Core.Repository
         Task<List<Serie>> GetSeriesByNameAsync(string name);
         Task<Serie> GetSerieByIdAsync(int id);
         Task<string> GetImagePathByIdAsync(int id);
-        Task<HttpStatusCode> AddRatingAsync(int serieId, string sessionId, double ratingValue);
-        Task<HttpStatusCode> DeleteRatingAsync(int serieId, string sessionId);
+        Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating);
+        Task<HttpStatusCode> DeleteRatingAsync(int serieId);
     }
 }

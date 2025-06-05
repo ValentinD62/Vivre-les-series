@@ -31,24 +31,6 @@ namespace VivreLesSeries.Business
             using var doc = JsonDocument.Parse(json);
             return doc.RootElement.GetProperty("session_id").GetString();
         }
-
-        public async Task<bool> RateTvShowAsync(int tvShowId, string sessionId, double rating)
-        {
-            var url = $"https://api.themoviedb.org/3/tv/{tvShowId}/rating?api_key={_apiKey}&session_id={sessionId}";
-
-            var payload = new { value = rating };
-            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(url, content);
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<bool> DeleteRatingAsync(int tvShowId, string sessionId)
-        {
-            var url = $"https://api.themoviedb.org/3/tv/{tvShowId}/rating?api_key={_apiKey}&session_id={sessionId}";
-            var response = await _httpClient.DeleteAsync(url);
-            return response.IsSuccessStatusCode;
-        }
     }
 
 }

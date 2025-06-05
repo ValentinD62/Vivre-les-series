@@ -1,4 +1,5 @@
 ﻿using VivreLesSeries.Entity;
+using VivreLesSeries.Entity.DTO;
 using VivreLesSeries.Core.Repository;
 using VivreLesSeries.Core.Business;
 using System.Net;
@@ -35,14 +36,14 @@ namespace VivreLesSeries.Business
             return listPath;
         }
 
-        public async Task<HttpStatusCode> AddRatingAsync(int serieId, string sessionId, double ratingValue)
+        public async Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating)
         {
-            return await _repository.AddRatingAsync(serieId, sessionId, ratingValue);
+            return await _repository.AddRatingAsync(serieId, rating);
         }
 
-        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId, string sessionId)
+        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId)
         {
-            return await _repository.DeleteRatingAsync(serieId, sessionId);
+            return await _repository.DeleteRatingAsync(serieId);
         }
     }
 }

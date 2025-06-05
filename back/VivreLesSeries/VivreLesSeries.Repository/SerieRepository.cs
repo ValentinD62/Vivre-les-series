@@ -1,23 +1,29 @@
 ﻿using System.Net.Http.Json;
 using VivreLesSeries.Core.Repository;
 using VivreLesSeries.Entity;
+using VivreLesSeries.Entity.DTO;
 using System.Text.Json;
 using System.Text;
 using System.Net.Http.Headers;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
+using VivreLesSeries.Repository.Context;
 
 namespace VivreLesSeries.Repository
 {
     public class SerieRepository : ISerieRepository
     {
+
+        private readonly UserSerieContext _context;
         private readonly HttpClient _httpClient;
         private const string BearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNDAxNTBlZjMwNjYzNjZhZmJkYTNiMzk0ZmE0MzBhMCIsIm5iZiI6MTc0NzM5OTE2My44MTc5OTk4LCJzdWIiOiI2ODI3MzFmYjNlZWVjODgyNzRhZGE2ZmYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.m2uo_7GXv2k5id-mRw9d66ocaOq3A_rufbdMwveRSi0";
 
-        public SerieRepository()
+        public SerieRepository(UserSerieContext context)
         {
             _httpClient = new HttpClient();
             //Obligatoire pour appeler l'API
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", BearerToken);
+            _context = context;
         }
 
         public async Task<List<Serie>> GetTopRatedSeriesAsync()
@@ -72,21 +78,25 @@ namespace VivreLesSeries.Repository
             return path;
         }
 
-        public async Task<HttpStatusCode> AddRatingAsync(int serieId, string sessionId, double ratingValue)
+        public async Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating)
         {
-            var url = $"https://api.themoviedb.org/3/tv/{serieId}/rating?session_id={sessionId}";
+            var url = $"https://api.themoviedb.org/3/tv/{serieId}/rating";
 
-            var payload = new { value = ratingValue };
+            var payload = new { value = rating.Value};
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(url, content);
+
+            //On l'ajoute également à la base de données
+            _context.Rating.Add(rating);
+            await _context.SaveChangesAsync();
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId, string sessionId)
+        public async Task<HttpStatusCode> DeleteRatingAsync(int serieId)
         {
-            var url = $"https://api.themoviedb.org/3/tv/{serieId}/rating?session_id={sessionId}";
+            var url = $"https://api.themoviedb.org/3/tv/{serieId}/rating";
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await _httpClient.SendAsync(request);
 

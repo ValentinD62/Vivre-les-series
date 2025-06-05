@@ -9,7 +9,7 @@ namespace VivreLesSeries.Core.Business
         Task<List<Serie>> GetSeriesByNameAsync(string name);
         Task<Serie> GetSerieByIdAsync(int id);
         Task<string> GetImagePathByIdAsync(int serieId);
-        Task<HttpStatusCode> AddRatingAsync(int serieId, string sessionId, double ratingValue);
-        Task<HttpStatusCode> DeleteRatingAsync(int serieId, string sessionId);
+        Task<HttpStatusCode> AddRatingAsync(int serieId, Rating rating);
+        Task<HttpStatusCode> DeleteRatingAsync(int serieId);
     }
 }

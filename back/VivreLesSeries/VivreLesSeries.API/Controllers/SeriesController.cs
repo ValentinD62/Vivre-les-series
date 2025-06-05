@@ -3,8 +3,12 @@ using VivreLesSeries.Business;
 using VivreLesSeries.Repository;
 using VivreLesSeries.Core.Repository;
 using VivreLesSeries.Entity;
+using VivreLesSeries.Entity.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using VivreLesSeries.Core.Business;
+using System.Security.Claims;
+using VivreLesSeries.Repository.Context;
 
 namespace VivreLesSeries.API.Controllers
 {
@@ -15,11 +19,10 @@ namespace VivreLesSeries.API.Controllers
         private readonly IMemoryCache _cache;
         private readonly SerieService _serieService;
 
-        public SeriesController(IMemoryCache cache)
+        public SeriesController(IMemoryCache cache, SerieService serieService)
         {
             _cache = cache;
-            ISerieRepository repo = new SerieRepository();
-            _serieService = new SerieService(repo);
+            _serieService = serieService;
         }
 
         [AllowAnonymous]
@@ -116,26 +119,42 @@ namespace VivreLesSeries.API.Controllers
 
         [HttpPost("{serieId}/rating")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
-        public async Task<IActionResult> AddRating(int serieId, string sessionId,[FromBody] Rating rating)
+        public async Task<IActionResult> AddRating(int serieId,[FromBody] RatingDto rating)
         {
-            if (rating.Value < 0.5 || rating.Value > 10.0)
+            try
             {
-                return BadRequest(new ResponseMessage { Message = "La note doit être entre 0.5 et 10.0." });
+                if (rating.Value < 0.5 || rating.Value > 10.0)
+                {
+                    return BadRequest(new ResponseMessage { Message = "La note doit être entre 0.5 et 10.0." });
+                }
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var newRating = new Rating
+                {
+                    Value = rating.Value,
+                    CreatedAt = DateTime.UtcNow,
+                    UserId = userId,
+                    SerieId = serieId
+                };
+                var success = await _serieService.AddRatingAsync(serieId, newRating);
+                if (success == System.Net.HttpStatusCode.Created)
+                    return StatusCode(201);
+                else if (success == System.Net.HttpStatusCode.NotFound)
+                    return NotFound(new ResponseMessage { Message = "Le service ne peut pas trouver la série." });
+                else if (success == System.Net.HttpStatusCode.BadRequest)
+                    return BadRequest(new ResponseMessage { Message = "Il y a un problème dans la série ou dans la note donnée." });
             }
-            var success = await _serieService.AddRatingAsync(serieId, sessionId, rating.Value);
-            if (success == System.Net.HttpStatusCode.OK)
-                return Ok(new { message = "Note ajoutée avec succès." });
-            else if (success == System.Net.HttpStatusCode.NotFound)
-                return NotFound(new ResponseMessage { Message = "Le service ne peut pas trouver la série." });
-            else if (success == System.Net.HttpStatusCode.BadRequest)
-                return BadRequest(new ResponseMessage { Message = "Il y a un problème dans la série ou dans la note donnée." });
-            else 
-                return StatusCode(500, new { message = "Erreur non identifiée lors de l'ajout de la note." });
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
+            }
+            return StatusCode(500);
+
+
         }
 
         [HttpDelete("{serieId}/rating")]
@@ -145,9 +164,9 @@ namespace VivreLesSeries.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseMessage))]
-        public async Task<IActionResult> DeleteRating(int serieId, string sessionId)
+        public async Task<IActionResult> DeleteRating(int serieId)
         {
-            var success = await _serieService.DeleteRatingAsync(serieId, sessionId);
+            var success = await _serieService.DeleteRatingAsync(serieId);
             if (success == System.Net.HttpStatusCode.OK)
                 return Ok(new ResponseMessage { Message = "Note supprimée avec succès." });
             else if (success == System.Net.HttpStatusCode.NotFound)
