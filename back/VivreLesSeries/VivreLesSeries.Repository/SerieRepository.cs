@@ -104,6 +104,7 @@ namespace VivreLesSeries.Repository
                 //On l'ajoute également à la base de données
                 _context.Rating.Add(rating);
                 await _context.SaveChangesAsync();
+                return HttpStatusCode.Created;
             }
             return response.StatusCode;
         }

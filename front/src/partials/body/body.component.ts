@@ -2,7 +2,7 @@ import {customElement, state} from "lit/decorators.js";
 import {css, html, LitElement, unsafeCSS} from "lit";
 import {HeaderComponent} from "../header/header.component.ts";
 import BodyCSS from "./body.scss?inline";
-import {getSeriesById} from "../../API/main.ts";
+import { getSeriesById } from "../../API/main.ts";
 
 @customElement('body-component')
 export class BodyComponent extends LitElement {
@@ -12,7 +12,7 @@ export class BodyComponent extends LitElement {
 
     getSerie(){
         // Simulate fetching series data
-        getSeriesById(1396).then((series) => {
+        getSeriesById(81553).then((series) => {
             this.series = series;
         }).catch((error) => {
             console.error("Error fetching series data:", error);
@@ -23,8 +23,11 @@ export class BodyComponent extends LitElement {
         })
     }
 
-    render() {
+    override firstUpdated() {
         this.getSerie();
+    }
+
+    render() {
         return html`
             <div class="body-container">
                 <div class="body-container__div-latest-img" style="background-image: url(${this.series.backdrop_path});">

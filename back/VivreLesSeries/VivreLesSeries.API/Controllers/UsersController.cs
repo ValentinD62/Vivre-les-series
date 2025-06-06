@@ -25,6 +25,21 @@ public class UsersController : ControllerBase
         _userSerieContext = context;
     }
 
+    [HttpGet("search/{userId}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
+    public async Task<IActionResult> SearchUserById(int userId)
+    {
+        var user = _userRepository.GetUserById(userId);
+        if (user == null)
+        {
+            return NotFound(new { message = "L'utilisateur n'a pas été trouvé" });
+        }
+        return Ok(user.Result);
+    }
+
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Object))]
@@ -92,6 +107,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{userId}/sessions")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Object))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> AddSession(int userId, [FromBody] UserSessionDto sessionDto)
     {
         var session = await _userRepository.AddSessionAsync(userId, sessionDto.TmdbSessionId);
@@ -99,6 +117,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{userId}/sessions/link")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Object))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> LinkTmdbSession(int userId, [FromBody] LinkSessionDto dto)
     {
         var session = await _userSessionService.LinkTmdbSessionAsync(userId, dto.RequestToken);

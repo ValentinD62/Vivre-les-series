@@ -118,7 +118,7 @@ namespace VivreLesSeries.API.Controllers
             return Ok(path);
         }
 
-        [HttpGet("/rating")]
+        [HttpGet("rating")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Rating))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseMessage))]
@@ -176,7 +176,7 @@ namespace VivreLesSeries.API.Controllers
 
         }
 
-        [HttpDelete("/rating")]
+        [HttpDelete("rating")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseMessage))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseMessage))]

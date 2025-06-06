@@ -35,6 +35,9 @@ export class HeaderComponent extends LitElement {
     }
 
     private displayUserPart() {
+        if (localStorage.getItem("token") !== null) {
+            this.isConnected = true;
+        }
         if (this.isConnected) {
             return html`
                 <div class="header-container__div-user" @click="${this.disconnect}">

@@ -14,6 +14,12 @@ namespace VivreLesSeries.Repository
             _context = context;
         }
 
+        public async Task<User?> GetUserById(int id)
+        {
+            var searchUser = await _context.Users.FindAsync(id);
+            return searchUser;
+        }
+
         public async Task<User> LoginAsync(string name, string password)
         {
             var searchUser = await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Password == password);

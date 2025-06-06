@@ -23,7 +23,7 @@ namespace VivreLesSeries.API.Controllers
             var comments = await _service.GetComments(serieId);
             if (comments == null)
             {
-                return StatusCode(500, new { message = "Problème à la création." });
+                return StatusCode(500, new { message = "Problème à la récupération d'information." });
             }
             return Ok(comments);
         }
