@@ -64,3 +64,8 @@ J'utilise Visual Studio pour pouvoir faire tourner l'API.
 Pour le frontend, une fois dans le dossier front, utiliser npm install puis npm run dev pour lancer le serveur.
 
 Si l'API a changé de port, il faut modifier le fichier `src/API/main.ts` pour mettre le bon port de l'API.
+
+# Exemple d'écran
+
+Voici un exemple sur la série Frieren.
+![Exemple de ce que l'on peux voir](/front/public/exemple_ecran_note_commentaire.png "Exemple de ce que l'on peux voir").
